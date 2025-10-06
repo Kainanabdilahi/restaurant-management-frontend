@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customers - Restaurant Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 w-64 bg-blue-700 text-white flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40"
+      >
+        <div
+          class="px-6 py-4 text-2xl font-bold border-b border-blue-800 flex items-center space-x-2"
+        >
+          <span class="material-icons">restaurant</span>
+          <span>Restaurant</span>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+          <a
+            href="index.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">dashboard</span><span>Dashboard</span>
+          </a>
+          <a
+            href="menu.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">menu_book</span><span>Menu</span>
+          </a>
+          <a
+            href="orders.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">receipt_long</span><span>Orders</span>
+          </a>
+          <a
+            href="customers.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">people</span><span>Customers</span>
+          </a>
+          <a
+            href="reservations.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">event_seat</span
+            ><span>Reservations</span>
+          </a>
+          <a
+            href="new_order.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">receipt</span><span>New Order</span>
+          </a>
+          <a
+            href="staff.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">badge</span><span>Staff</span>
+          </a>
+          <a
+            href="reports.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">bar_chart</span><span>Reports</span>
+          </a>
+          <a
+            href="settings.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">settings</span><span>Settings</span>
+          </a>
+        </nav>
+        <div class="p-4 border-t border-blue-800">
+          <a
+            href="login.html"
+            class="flex items-center justify-center space-x-2 px-3 py-2 rounded bg-red-600 hover:bg-red-500"
+          >
+            <span class="material-icons">logout</span><span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <div
+        id="overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-30 md:hidden"
+      ></div>
+
+      <!-- Main -->
+      <div class="flex-1 flex flex-col w-full md:ml-64">
+        <header
+          class="bg-white shadow px-4 py-4 flex justify-between items-center"
+        >
+          <div class="flex items-center space-x-2">
+            <button id="menuBtn" class="md:hidden">
+              <span class="material-icons">menu</span>
+            </button>
+            <span class="text-lg font-semibold">Customers</span>
+          </div>
+        </header>
+
+        <main class="p-6 space-y-6 overflow-y-auto">
+          <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-bold">Customer List</h2>
+            <button
+              id="addCustomerBtn"
+              class="flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
+            >
+              <span class="material-icons mr-2">add</span> Add New Customer
+            </button>
+          </div>
+
+          <!-- Search -->
+          <div class="mt-4">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search customers..."
+              class="w-full border rounded px-3 py-2 shadow"
+            />
+          </div>
+
+          <div class="bg-white rounded shadow overflow-x-auto mt-2">
+            <table class="min-w-full text-left">
+              <thead class="bg-blue-600 text-white">
+                <tr>
+                  <th class="px-4 py-2">Name</th>
+                  <th class="px-4 py-2">Email</th>
+                  <th class="px-4 py-2">Phone</th>
+                  <th class="px-4 py-2">Joined</th>
+                  <th class="px-4 py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="customersTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex justify-end space-x-2 mt-2">
+            <button
+              id="prevPage"
+              class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Previous
+            </button>
+            <button
+              id="nextPage"
+              class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Next
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Popup Form -->
+    <div
+      id="popupForm"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50"
+    >
+      <div class="bg-white rounded shadow p-6 w-full max-w-md">
+        <h3 class="text-xl font-bold mb-4" id="popupTitle">Add New Customer</h3>
+        <form id="customerForm" class="space-y-4">
+          <div>
+            <label class="block mb-1 font-semibold">Name</label>
+            <input
+              type="text"
+              class="w-full border rounded px-3 py-2"
+              required
+            />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Email</label>
+            <input
+              type="email"
+              class="w-full border rounded px-3 py-2"
+              required
+            />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Phone</label>
+            <input
+              type="text"
+              class="w-full border rounded px-3 py-2"
+              required
+            />
+          </div>
+          <div class="flex justify-end gap-2">
+            <button
+              type="button"
+              id="cancelBtn"
+              class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Sidebar toggle & active link
+      const menuBtn = document.getElementById("menuBtn");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+
+      menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      });
+      overlay.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      });
+
+      const current = (
+        window.location.pathname.split("/").pop() || "index.html"
+      ).toLowerCase();
+      document.querySelectorAll(".sidebar-link").forEach((a) => {
+        const target = (a.getAttribute("href") || "")
+          .split("/")
+          .pop()
+          .toLowerCase();
+        if (target === current) a.classList.add("bg-blue-600", "font-semibold");
+      });
+
+      // Customers data
+      let customers = [
+        {
+          name: "John Doe",
+          email: "john@example.com",
+          phone: "+123456789",
+          joined: "2025-01-01",
+        },
+        {
+          name: "Jane Smith",
+          email: "jane@example.com",
+          phone: "+987654321",
+          joined: "2025-02-15",
+        },
+      ];
+
+      const customersTableBody = document.getElementById("customersTableBody");
+      const searchInput = document.getElementById("searchInput");
+      const prevPage = document.getElementById("prevPage");
+      const nextPage = document.getElementById("nextPage");
+      const rowsPerPage = 10;
+      let currentPage = 1;
+
+      function renderTable() {
+        customersTableBody.innerHTML = "";
+        const filtered = customers.filter(
+          (c) =>
+            c.name.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            c.email.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            c.phone.toLowerCase().includes(searchInput.value.toLowerCase())
+        );
+
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const pageData = filtered.slice(start, end);
+
+        pageData.forEach((c) => {
+          const row = document.createElement("tr");
+          row.classList.add("border-t");
+          row.innerHTML = `
+            <td class="px-4 py-2">${c.name}</td>
+            <td class="px-4 py-2">${c.email}</td>
+            <td class="px-4 py-2">${c.phone}</td>
+            <td class="px-4 py-2">${c.joined}</td>
+            <td class="px-4 py-2">
+              <button class="text-white rounded bg-blue-600 py-1 px-2 hover:bg-blue-500 editBtn">Edit</button> |
+              <button class="text-white rounded bg-red-600 py-1 px-2 hover:bg-red-500  deleteBtn">Delete</button>
+            </td>
+          `;
+          customersTableBody.appendChild(row);
+        });
+      }
+
+      renderTable();
+
+      searchInput.addEventListener("input", () => {
+        currentPage = 1;
+        renderTable();
+      });
+
+      prevPage.addEventListener("click", () => {
+        if (currentPage > 1) currentPage--;
+        renderTable();
+      });
+
+      nextPage.addEventListener("click", () => {
+        const filtered = customers.filter(
+          (c) =>
+            c.name.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            c.email.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            c.phone.toLowerCase().includes(searchInput.value.toLowerCase())
+        );
+        if (currentPage * rowsPerPage < filtered.length) currentPage++;
+        renderTable();
+      });
+
+      // Popup and form logic
+      const addCustomerBtn = document.getElementById("addCustomerBtn");
+      const popupForm = document.getElementById("popupForm");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const customerForm = document.getElementById("customerForm");
+      const popupTitle = document.getElementById("popupTitle");
+
+      let editingIndex = null;
+
+      addCustomerBtn.addEventListener("click", () => {
+        popupTitle.textContent = "Add New Customer";
+        customerForm.reset();
+        popupForm.classList.remove("hidden");
+        editingIndex = null;
+      });
+
+      cancelBtn.addEventListener("click", () =>
+        popupForm.classList.add("hidden")
+      );
+
+      customerForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = customerForm[0].value;
+        const email = customerForm[1].value;
+        const phone = customerForm[2].value;
+        const joined = new Date().toISOString().split("T")[0];
+
+        if (editingIndex !== null) {
+          customers[editingIndex] = {
+            name,
+            email,
+            phone,
+            joined: customers[editingIndex].joined,
+          };
+          Swal.fire({
+            icon: "success",
+            title: "Customer Updated!",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        } else {
+          customers.push({ name, email, phone, joined });
+          Swal.fire({
+            icon: "success",
+            title: "Customer Added!",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        }
+
+        popupForm.classList.add("hidden");
+        renderTable();
+      });
+
+      // Edit/Delete row
+      customersTableBody.addEventListener("click", (e) => {
+        const row = e.target.closest("tr");
+        if (!row) return;
+
+        const filtered = customers.filter(
+          (c) =>
+            c.name.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            c.email.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            c.phone.toLowerCase().includes(searchInput.value.toLowerCase())
+        );
+
+        const rowIndex = Array.from(customersTableBody.children).indexOf(row);
+        const actualIndex = customers.indexOf(
+          filtered[(currentPage - 1) * rowsPerPage + rowIndex]
+        );
+
+        if (e.target.classList.contains("editBtn")) {
+          editingIndex = actualIndex;
+          popupTitle.textContent = "Edit Customer";
+          customerForm[0].value = customers[actualIndex].name;
+          customerForm[1].value = customers[actualIndex].email;
+          customerForm[2].value = customers[actualIndex].phone;
+          popupForm.classList.remove("hidden");
+        }
+
+        if (e.target.classList.contains("deleteBtn")) {
+          customers.splice(actualIndex, 1);
+          Swal.fire({
+            icon: "success",
+            title: "Customer Deleted!",
+            timer: 1000,
+            showConfirmButton: false,
+          });
+          renderTable();
+        }
+      });
+    </script>
+  </body>
+</html>

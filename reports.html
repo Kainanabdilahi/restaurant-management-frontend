@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports - Restaurant Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style>
+      /* Fix charts container to prevent infinite scroll */
+      .chart-container {
+        height: 250px; /* Fixed height */
+      }
+      main {
+        min-height: calc(100vh - 64px); /* Header height considered */
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 w-64 bg-blue-700 text-white flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40"
+      >
+        <div
+          class="px-6 py-4 text-2xl font-bold border-b border-gray-700 flex items-center space-x-2"
+        >
+          <span class="material-icons">restaurant</span>
+          <span>Restaurant</span>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+          <a
+            href="index.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">dashboard</span><span>Dashboard</span>
+          </a>
+          <a
+            href="menu.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">menu_book</span><span>Menu</span>
+          </a>
+          <a
+            href="orders.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">receipt_long</span><span>Orders</span>
+          </a>
+          <a
+            href="customers.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">people</span><span>Customers</span>
+          </a>
+          <a
+            href="reservations.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">event_seat</span
+            ><span>Reservations</span>
+          </a>
+          <a
+            href="new_order.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">receipt</span><span>New Order</span>
+          </a>
+          <a
+            href="staff.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">badge</span><span>Staff</span>
+          </a>
+          <a
+            href="reports.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded bg-blue-600 font-semibold"
+          >
+            <span class="material-icons">bar_chart</span><span>Reports</span>
+          </a>
+          <a
+            href="settings.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">settings</span><span>Settings</span>
+          </a>
+        </nav>
+        <div class="p-4 border-t border-gray-700">
+          <a
+            href="login.html"
+            class="flex items-center justify-center space-x-2 px-3 py-2 rounded bg-red-600 hover:bg-red-500"
+          >
+            <span class="material-icons">logout</span><span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <div
+        id="overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-30 md:hidden"
+      ></div>
+
+      <!-- Main -->
+      <div class="flex-1 flex flex-col w-full md:ml-64">
+        <header
+          class="bg-white shadow px-4 py-4 flex justify-between items-center"
+        >
+          <div class="flex items-center space-x-2">
+            <button id="menuBtn" class="md:hidden">
+              <span class="material-icons">menu</span>
+            </button>
+            <span class="text-lg font-semibold">Reports</span>
+          </div>
+        </header>
+
+        <main class="p-6 space-y-6 overflow-y-auto">
+          <!-- Heading with buttons inline -->
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4"
+          >
+            <h2 class="text-2xl font-bold">Sales Reports</h2>
+            <div class="flex gap-2 flex-wrap">
+              <button
+                id="refreshBtn"
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 flex items-center gap-1"
+              >
+                <span class="material-icons">refresh</span> Refresh
+              </button>
+              <button
+                id="exportBtn"
+                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500 flex items-center gap-1"
+              >
+                <span class="material-icons">download</span> Export PDF
+              </button>
+              <select id="filterMonth" class="border px-2 py-1 rounded">
+                <option value="all">All Months</option>
+                <option value="Jan">January</option>
+                <option value="Feb">February</option>
+                <option value="Mar">March</option>
+                <option value="Apr">April</option>
+                <option value="May">May</option>
+                <option value="Jun">June</option>
+                <option value="Jul">July</option>
+                <option value="Aug">August</option>
+                <option value="Sep">September</option>
+                <option value="Oct">October</option>
+                <option value="Nov">November</option>
+                <option value="Dec">December</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white rounded shadow p-4 chart-container">
+              <h3 class="font-semibold mb-2">Monthly Sales</h3>
+              <canvas id="salesChart"></canvas>
+            </div>
+            <div class="bg-white rounded shadow p-4 chart-container">
+              <h3 class="font-semibold mb-2">Orders Distribution</h3>
+              <canvas id="ordersChart"></canvas>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Sidebar toggle
+      const menuBtn = document.getElementById("menuBtn");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+
+      menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      });
+      overlay.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      });
+
+      // Active sidebar link
+      const current = (
+        window.location.pathname.split("/").pop() || "index.html"
+      ).toLowerCase();
+      document.querySelectorAll(".sidebar-link").forEach((a) => {
+        const target = (a.getAttribute("href") || "")
+          .split("/")
+          .pop()
+          .toLowerCase();
+        if (target === current) {
+          a.classList.add("bg-blue-600", "font-semibold");
+        }
+      });
+
+      // Charts
+      const salesCtx = document.getElementById("salesChart").getContext("2d");
+      const salesChart = new Chart(salesCtx, {
+        type: "line",
+        data: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+          datasets: [
+            {
+              label: "Sales",
+              data: [300, 400, 350, 500, 600],
+              borderColor: "#4F46E5",
+              backgroundColor: "rgba(79,70,229,0.1)",
+              fill: true,
+              tension: 0.3,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+
+      const ordersCtx = document.getElementById("ordersChart").getContext("2d");
+      const ordersChart = new Chart(ordersCtx, {
+        type: "doughnut",
+        data: {
+          labels: ["Dine-in", "Takeaway", "Delivery"],
+          datasets: [
+            {
+              data: [45, 25, 30],
+              backgroundColor: ["#4F46E5", "#22C55E", "#F59E0B"],
+            },
+          ],
+        },
+        options: { responsive: true, maintainAspectRatio: false },
+      });
+
+      // Buttons with SweetAlert
+      document.getElementById("refreshBtn").addEventListener("click", () => {
+        Swal.fire({
+          icon: "info",
+          title: "Data Refreshed",
+          text: "The sales and orders data has been refreshed successfully!",
+        });
+      });
+
+      document.getElementById("exportBtn").addEventListener("click", () => {
+        Swal.fire({
+          icon: "success",
+          title: "Export Successful",
+          text: "The report has been exported as PDF!",
+        });
+      });
+
+      document.getElementById("filterMonth").addEventListener("change", (e) => {
+        const month = e.target.value;
+        Swal.fire({
+          icon: "info",
+          title: "Filter Applied",
+          text:
+            month === "all"
+              ? "Showing all months"
+              : `Showing data for ${month}`,
+        });
+      });
+    </script>
+  </body>
+</html>

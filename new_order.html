@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Order - Restaurant Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 w-64 bg-blue-700 text-white flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40"
+      >
+        <div
+          class="px-6 py-4 text-2xl font-bold border-b border-blue-800 flex items-center space-x-2"
+        >
+          <span class="material-icons">restaurant</span>
+          <span>Restaurant</span>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+          <a
+            href="index.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">dashboard</span><span>Dashboard</span>
+          </a>
+          <a
+            href="menu.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">menu_book</span><span>Menu</span>
+          </a>
+          <a
+            href="orders.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">receipt_long</span><span>Orders</span>
+          </a>
+          <a
+            href="customers.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">people</span><span>Customers</span>
+          </a>
+          <a
+            href="reservations.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">event_seat</span
+            ><span>Reservations</span>
+          </a>
+          <a
+            href="new_order.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">receipt</span><span>New Order</span>
+          </a>
+          <a
+            href="staff.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">badge</span><span>Staff</span>
+          </a>
+          <a
+            href="reports.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">bar_chart</span><span>Reports</span>
+          </a>
+          <a
+            href="settings.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">settings</span><span>Settings</span>
+          </a>
+        </nav>
+        <div class="p-4 border-t border-blue-800">
+          <a
+            href="login.html"
+            class="flex items-center justify-center space-x-2 px-3 py-2 rounded bg-red-600 hover:bg-red-500"
+          >
+            <span class="material-icons">logout</span><span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <div
+        id="overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-30 md:hidden"
+      ></div>
+
+      <!-- Main -->
+      <div class="flex-1 flex flex-col w-full md:ml-64 overflow-y-auto">
+        <header
+          class="bg-white shadow px-4 py-4 flex justify-between items-center"
+        >
+          <div class="flex items-center space-x-2">
+            <button id="menuBtn" class="md:hidden">
+              <span class="material-icons">menu</span>
+            </button>
+            <span class="text-lg font-semibold">New Order</span>
+          </div>
+        </header>
+
+        <main class="p-6 flex flex-col space-y-6">
+          <h2 class="text-2xl font-bold">Create New Order</h2>
+
+          <!-- Order Table -->
+          <div class="bg-white rounded shadow p-4 flex flex-col space-y-4">
+            <table class="min-w-full text-left" id="orderTable">
+              <thead class="bg-blue-600 text-white">
+                <tr>
+                  <th class="px-4 py-2">Item</th>
+                  <th class="px-4 py-2">Quantity</th>
+                  <th class="px-4 py-2">Price</th>
+                  <th class="px-4 py-2">Total</th>
+                  <th class="px-4 py-2">Action</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <button
+              id="addItemBtn"
+              class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500 w-40"
+            >
+              Add Item
+            </button>
+          </div>
+
+          <!-- Summary Section -->
+          <div class="bg-white rounded shadow p-4 flex flex-col space-y-4">
+            <div class="space-y-2">
+              <div class="flex justify-between">
+                <span>Subtotal:</span><span id="subtotal">0.00</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Discount:</span>
+                <input
+                  type="number"
+                  id="discount"
+                  value="0"
+                  class="w-20 border rounded px-2 py-1"
+                />
+              </div>
+              <div class="flex justify-between">
+                <span>Tax (10%):</span><span id="tax">0.00</span>
+              </div>
+              <div class="flex justify-between font-bold">
+                <span>Total:</span><span id="total">0.00</span>
+              </div>
+            </div>
+            <div class="flex gap-4 flex-col md:flex-row">
+              <button
+                id="saveOrder"
+                class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 w-full md:w-auto"
+              >
+                Save Order
+              </button>
+              <button
+                id="generateReceipt"
+                class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-500 w-full md:w-auto"
+              >
+                Generate Receipt / PDF
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Sidebar toggle
+      const menuBtn = document.getElementById("menuBtn");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+
+      menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      });
+      overlay.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      });
+
+      // Highlight active sidebar link
+      const current = (
+        window.location.pathname.split("/").pop() || "index.html"
+      ).toLowerCase();
+      document.querySelectorAll(".sidebar-link").forEach((link) => {
+        const target = (link.getAttribute("href") || "")
+          .split("/")
+          .pop()
+          .toLowerCase();
+        if (target === current)
+          link.classList.add("bg-blue-600", "font-semibold");
+      });
+
+      // Order table logic
+      const orderTable = document.querySelector("#orderTable tbody");
+      const addItemBtn = document.getElementById("addItemBtn");
+      const subtotalEl = document.getElementById("subtotal");
+      const taxEl = document.getElementById("tax");
+      const totalEl = document.getElementById("total");
+      const discountEl = document.getElementById("discount");
+      const generateReceiptBtn = document.getElementById("generateReceipt");
+      const saveOrderBtn = document.getElementById("saveOrder");
+
+      const itemsList = [
+        { name: "Burger", price: 5.0 },
+        { name: "Pizza", price: 8.0 },
+        { name: "Pasta", price: 6.5 },
+        { name: "Salad", price: 4.0 },
+        { name: "Soda", price: 1.5 },
+      ];
+
+      function updateTotals() {
+        let subtotal = 0;
+        orderTable.querySelectorAll("tr").forEach((row) => {
+          const total =
+            parseFloat(row.querySelector(".itemTotal").textContent) || 0;
+          subtotal += total;
+        });
+        const discount = parseFloat(discountEl.value) || 0;
+        const tax = (subtotal - discount) * 0.1;
+        const total = subtotal - discount + tax;
+
+        subtotalEl.textContent = subtotal.toFixed(2);
+        taxEl.textContent = tax.toFixed(2);
+        totalEl.textContent = total.toFixed(2);
+      }
+
+      function addRow() {
+        const row = document.createElement("tr");
+        row.classList.add("border-t");
+
+        let options = itemsList
+          .map((item) => `<option value="${item.price}">${item.name}</option>`)
+          .join("");
+
+        row.innerHTML = `
+        <td class="px-4 py-2">
+          <select class="w-full border rounded px-2 py-1 itemSelect">${options}</select>
+        </td>
+        <td class="px-4 py-2"><input type="number" class="w-20 border rounded px-2 py-1 quantity" value="1" min="1"></td>
+        <td class="px-4 py-2"><input type="number" class="w-24 border rounded px-2 py-1 price" value="${
+          itemsList[0].price
+        }" min="0"></td>
+        <td class="px-4 py-2 itemTotal">${itemsList[0].price.toFixed(2)}</td>
+        <td class="px-4 py-2"><button class="removeBtn px-2 py-1 bg-red-600 text-white rounded hover:bg-red-500">Remove</button></td>
+      `;
+        orderTable.appendChild(row);
+
+        const select = row.querySelector(".itemSelect");
+        const quantityInput = row.querySelector(".quantity");
+        const priceInput = row.querySelector(".price");
+        const totalCell = row.querySelector(".itemTotal");
+
+        function updateRowTotal() {
+          const total =
+            (parseFloat(quantityInput.value) || 0) *
+            (parseFloat(priceInput.value) || 0);
+          totalCell.textContent = total.toFixed(2);
+          updateTotals();
+        }
+
+        select.addEventListener("change", () => {
+          priceInput.value = select.value;
+          updateRowTotal();
+        });
+        quantityInput.addEventListener("input", updateRowTotal);
+        priceInput.addEventListener("input", updateRowTotal);
+
+        row.querySelector(".removeBtn").addEventListener("click", () => {
+          row.remove();
+          updateTotals();
+        });
+
+        updateTotals();
+      }
+
+      addItemBtn.addEventListener("click", addRow);
+      discountEl.addEventListener("input", updateTotals);
+
+      saveOrderBtn.addEventListener("click", () => {
+        Swal.fire({
+          icon: "success",
+          title: "Order Saved!",
+          text: "The order has been saved successfully.",
+        });
+      });
+
+      generateReceiptBtn.addEventListener("click", () => {
+        let receipt = "---- Restaurant Receipt ----\n";
+        orderTable.querySelectorAll("tr").forEach((row, i) => {
+          const item = row.querySelector(".itemSelect").selectedOptions[0].text;
+          const qty = row.querySelector(".quantity").value;
+          const price = row.querySelector(".price").value;
+          const total = row.querySelector(".itemTotal").textContent;
+          receipt += `${i + 1}. ${item} x${qty} @${price} = ${total}\n`;
+        });
+        receipt += `---------------------------\nSubtotal: ${subtotalEl.textContent}\nDiscount: ${discountEl.value}\nTax: ${taxEl.textContent}\nTotal: ${totalEl.textContent}\n`;
+
+        Swal.fire({
+          title: "Receipt",
+          html: `<pre style="text-align:left">${receipt}</pre>`,
+          width: 500,
+          confirmButtonText: "Close",
+        });
+      });
+
+      // Initialize with one row
+      addRow();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reservations - Restaurant Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 w-64 bg-blue-700 text-white flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40"
+      >
+        <div
+          class="px-6 py-4 text-2xl font-bold border-b border-blue-800 flex items-center space-x-2"
+        >
+          <span class="material-icons">restaurant</span>
+          <span>Restaurant</span>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+          <a
+            href="index.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">dashboard</span><span>Dashboard</span>
+          </a>
+          <a
+            href="menu.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">menu_book</span><span>Menu</span>
+          </a>
+          <a
+            href="orders.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">receipt_long</span><span>Orders</span>
+          </a>
+          <a
+            href="customers.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">people</span><span>Customers</span>
+          </a>
+          <a
+            href="reservations.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">event_seat</span
+            ><span>Reservations</span>
+          </a>
+          <a
+            href="new_order.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">receipt</span><span>New Order</span>
+          </a>
+          <a
+            href="staff.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">badge</span><span>Staff</span>
+          </a>
+          <a
+            href="reports.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">bar_chart</span><span>Reports</span>
+          </a>
+          <a
+            href="settings.html"
+            class="sidebar-link flex items-center space-x-2 px-3 py-2 rounded hover:bg-blue-600"
+          >
+            <span class="material-icons">settings</span><span>Settings</span>
+          </a>
+        </nav>
+        <div class="p-4 border-t border-blue-800">
+          <a
+            href="login.html"
+            class="flex items-center justify-center space-x-2 px-3 py-2 rounded bg-red-600 hover:bg-red-500"
+          >
+            <span class="material-icons">logout</span><span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <div
+        id="overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-30 md:hidden"
+      ></div>
+
+      <!-- Main -->
+      <div class="flex-1 flex flex-col w-full md:ml-64">
+        <header
+          class="bg-white shadow px-4 py-4 flex justify-between items-center"
+        >
+          <div class="flex items-center space-x-2">
+            <button id="menuBtn" class="md:hidden">
+              <span class="material-icons">menu</span>
+            </button>
+            <span class="text-lg font-semibold">Reservations</span>
+          </div>
+        </header>
+
+        <main class="p-6 space-y-6 overflow-y-auto">
+          <h2 class="text-2xl font-bold mb-4">Make a Reservation</h2>
+
+          <!-- Reservation Form -->
+          <form
+            id="reservationForm"
+            class="bg-white p-4 rounded shadow grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <input
+              type="text"
+              placeholder="Name"
+              class="border p-2 rounded w-full"
+              required
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              class="border p-2 rounded w-full"
+              required
+            />
+            <input
+              type="tel"
+              placeholder="Phone"
+              class="border p-2 rounded w-full"
+              required
+            />
+            <input type="date" class="border p-2 rounded w-full" required />
+            <input type="time" class="border p-2 rounded w-full" required />
+            <input
+              type="number"
+              placeholder="Guests"
+              class="border p-2 rounded w-full"
+              required
+            />
+            <button
+              type="submit"
+              class="col-span-1 md:col-span-2 bg-green-600 text-white py-2 rounded hover:bg-green-500"
+            >
+              Submit
+            </button>
+          </form>
+
+          <!-- Search -->
+          <div class="mt-4">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search reservations..."
+              class="w-full border rounded px-3 py-2 shadow"
+            />
+          </div>
+
+          <!-- Reservations Table -->
+          <div class="bg-white rounded shadow overflow-x-auto mt-2">
+            <table class="min-w-full text-left">
+              <thead class="bg-blue-600 text-white">
+                <tr>
+                  <th class="px-4 py-2">Name</th>
+                  <th class="px-4 py-2">Email</th>
+                  <th class="px-4 py-2">Phone</th>
+                  <th class="px-4 py-2">Date</th>
+                  <th class="px-4 py-2">Time</th>
+                  <th class="px-4 py-2">Guests</th>
+                  <th class="px-4 py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="reservationsTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex justify-end space-x-2 mt-2">
+            <button
+              id="prevPage"
+              class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Previous
+            </button>
+            <button
+              id="nextPage"
+              class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Next
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Sidebar toggle & active link
+      const menuBtn = document.getElementById("menuBtn");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+
+      menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      });
+      overlay.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      });
+
+      const current = (
+        window.location.pathname.split("/").pop() || "index.html"
+      ).toLowerCase();
+      document.querySelectorAll(".sidebar-link").forEach((a) => {
+        const target = (a.getAttribute("href") || "")
+          .split("/")
+          .pop()
+          .toLowerCase();
+        if (target === current) a.classList.add("bg-blue-600", "font-semibold");
+      });
+
+      // Reservations data
+      let reservations = [];
+
+      const reservationsTableBody = document.getElementById(
+        "reservationsTableBody"
+      );
+      const reservationForm = document.getElementById("reservationForm");
+      const searchInput = document.getElementById("searchInput");
+      const prevPage = document.getElementById("prevPage");
+      const nextPage = document.getElementById("nextPage");
+      const rowsPerPage = 10;
+      let currentPage = 1;
+      let editingIndex = null;
+
+      function renderTable() {
+        reservationsTableBody.innerHTML = "";
+        const filtered = reservations.filter(
+          (r) =>
+            r.name.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            r.email.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            r.phone.toLowerCase().includes(searchInput.value.toLowerCase())
+        );
+
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const pageData = filtered.slice(start, end);
+
+        pageData.forEach((r) => {
+          const row = document.createElement("tr");
+          row.classList.add("border-t");
+          row.innerHTML = `
+            <td class="px-4 py-2">${r.name}</td>
+            <td class="px-4 py-2">${r.email}</td>
+            <td class="px-4 py-2">${r.phone}</td>
+            <td class="px-4 py-2">${r.date}</td>
+            <td class="px-4 py-2">${r.time}</td>
+            <td class="px-4 py-2">${r.guests}</td>
+            <td class="px-4 py-2">
+              <button class="text-white rounded bg-blue-600 py-1 px-2 hover:bg-blue-500 editBtn">Edit</button> |
+              <button class="text-white rounded bg-red-600 py-1 px-2 hover:bg-red-500 deleteBtn">Delete</button>
+            </td>
+          `;
+          reservationsTableBody.appendChild(row);
+        });
+      }
+
+      searchInput.addEventListener("input", () => {
+        currentPage = 1;
+        renderTable();
+      });
+      prevPage.addEventListener("click", () => {
+        if (currentPage > 1) currentPage--;
+        renderTable();
+      });
+      nextPage.addEventListener("click", () => {
+        const filtered = reservations.filter(
+          (r) =>
+            r.name.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            r.email.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            r.phone.toLowerCase().includes(searchInput.value.toLowerCase())
+        );
+        if (currentPage * rowsPerPage < filtered.length) currentPage++;
+        renderTable();
+      });
+
+      reservationForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const [name, email, phone, date, time, guests] =
+          reservationForm.elements;
+
+        if (editingIndex !== null) {
+          reservations[editingIndex] = {
+            name: name.value,
+            email: email.value,
+            phone: phone.value,
+            date: date.value,
+            time: time.value,
+            guests: guests.value,
+          };
+          Swal.fire({
+            icon: "success",
+            title: "Reservation Updated!",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        } else {
+          reservations.push({
+            name: name.value,
+            email: email.value,
+            phone: phone.value,
+            date: date.value,
+            time: time.value,
+            guests: guests.value,
+          });
+          Swal.fire({
+            icon: "success",
+            title: "Reservation Added!",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        }
+
+        reservationForm.reset();
+        editingIndex = null;
+        renderTable();
+      });
+
+      reservationsTableBody.addEventListener("click", (e) => {
+        const row = e.target.closest("tr");
+        if (!row) return;
+
+        const filtered = reservations.filter(
+          (r) =>
+            r.name.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            r.email.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            r.phone.toLowerCase().includes(searchInput.value.toLowerCase())
+        );
+        const rowIndex = Array.from(reservationsTableBody.children).indexOf(
+          row
+        );
+        const actualIndex = reservations.indexOf(
+          filtered[(currentPage - 1) * rowsPerPage + rowIndex]
+        );
+
+        if (e.target.classList.contains("editBtn")) {
+          editingIndex = actualIndex;
+          const r = reservations[actualIndex];
+          reservationForm.elements[0].value = r.name;
+          reservationForm.elements[1].value = r.email;
+          reservationForm.elements[2].value = r.phone;
+          reservationForm.elements[3].value = r.date;
+          reservationForm.elements[4].value = r.time;
+          reservationForm.elements[5].value = r.guests;
+        }
+
+        if (e.target.classList.contains("deleteBtn")) {
+          reservations.splice(actualIndex, 1);
+          Swal.fire({
+            icon: "success",
+            title: "Reservation Deleted!",
+            timer: 1000,
+            showConfirmButton: false,
+          });
+          renderTable();
+        }
+      });
+    </script>
+  </body>
+</html>
